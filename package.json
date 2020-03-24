@@ -1,0 +1,27 @@
+{
+  "name": "spc-notify",
+  "version": "1.0.0",
+  "description": "SPC Notification Service",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BohdanPetryshyn/spc-notify.git"
+  },
+  "keywords": [
+    "node",
+    "socket io",
+    "chat"
+  ],
+  "author": "BohdanPetryshyn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BohdanPetryshyn/spc-notify/issues"
+  },
+  "homepage": "https://github.com/BohdanPetryshyn/spc-notify#readme",
+  "dependencies": {
+    "socket.io": "^2.3.0"
+  }
+}
