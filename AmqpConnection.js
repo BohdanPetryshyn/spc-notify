@@ -1,7 +1,8 @@
 const amqp = require('amqplib');
 const EventEmitter = require('events');
 
-const AMQP_URL = process.env.AMQP_HOST || 'amqp://localhost';
+const AMQP_HOST = process.env.AMQP_HOST || 'localhost';
+const AMQP_URL = `amqp://${AMQP_HOST}`;
 
 class AmqpConnection extends EventEmitter {
   constructor(exchangeName, queueName) {
