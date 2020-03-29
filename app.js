@@ -12,7 +12,20 @@ const broadcast = message => {
 amqpConnection.on('message', broadcast);
 
 io.on('connection', socket => {
-  socket.on('message', message => amqpConnection.publish(message));
+  socket.on('message', message => {
+    console.log('Message received: ', message);
+    amqpConnection.publish(message);
+  });
 });
 
-amqpConnection.init().then(() => console.log('Amqp connected.'));
+const initAmqp = () => {
+  amqpConnection
+    .init()
+    .then(() => console.log('AMQP connected.'))
+    .catch(() => {
+      console.log('Retrying to connect AMQP.');
+      setTimeout(initAmqp, 1000);
+    });
+};
+
+initAmqp();
