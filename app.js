@@ -1,31 +1,25 @@
 const PORT = process.env.PORT || 3000;
+const AMQP_HOST = process.env.AMQP_HOST || 'localhost';
+const AMQP_URL = `amqp://${AMQP_HOST}`;
+
+const spcAmqpClient = require('@bpetryshyn/spc-amqp-client');
 const io = require('socket.io')(PORT);
-
-const AmqpConnection = require('./AmqpConnection');
-
-const amqpConnection = new AmqpConnection('spc', `spc-notify-${PORT}`);
 
 const broadcast = message => {
   io.emit('message', message);
 };
 
-amqpConnection.on('message', broadcast);
+const startApp = async () => {
+  const amqpClient = await spcAmqpClient(AMQP_URL);
 
-io.on('connection', socket => {
-  socket.on('message', message => {
-    console.log('Message received: ', message);
-    amqpConnection.publish(message);
-  });
-});
+  amqpClient.createMessageConsumer(broadcast);
 
-const initAmqp = () => {
-  amqpConnection
-    .init()
-    .then(() => console.log('AMQP connected.'))
-    .catch(() => {
-      console.log('Retrying to connect AMQP.');
-      setTimeout(initAmqp, 1000);
+  io.on('connection', socket => {
+    socket.on('message', message => {
+      console.log('Message received: ', message);
+      amqpClient.publishMessage(message);
     });
+  });
 };
 
-initAmqp();
+startApp();
